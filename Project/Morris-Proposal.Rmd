@@ -1,0 +1,106 @@
+---
+title: "Morris-Proposal"
+author: "Sharon Morris"
+date: "October 16, 2016"
+output: pdf_document
+---
+
+```{r include=FALSE, cache=FALSE}
+# DO NOT REMOVE
+# THIS IS FOR SETTING SOME PLOTTING PARAMETERS SO THAT YOUR PLOTS DON'T TAKE UP TOO MUCH SPACE
+# IF YOU WOULD LIKE TO CHANGE THESE, SEE HELP FILES ON THE par() FUNCTION
+# OR ASK FOR HELP
+library(knitr)
+## set global chunk options
+opts_chunk$set(fig.path='figure/manual-', cache.path='cache/manual-', fig.align='center', fig.show='hold', par=TRUE)
+## tune details of base graphics (http://yihui.name/knitr/hooks)
+knit_hooks$set(par=function(before, options, envir){
+if (before && options$fig.show!='none') par(mar=c(4,4,.2,.1),cex.lab=.95,cex.axis=.9,mgp=c(2,.7,0),tcl=-.3)
+})
+```
+
+```{r}
+# load data
+library(jsonlite)
+data <- fromJSON("https://data.cityofnewyork.us/resource/xx67-kt59.json")
+head(data)
+
+# Convert dataframe to table
+require(dplyr)
+dataTbl <- tbl_df(data)
+head(dataTbl)
+```
+
+
+### Research question 
+
+**You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
+
+What is the grade rating most frequently received by New York City food establishments during the initial inspection by the health department? Is there a correlation between the type of grade received during the initial inspection and the type of food establishment (e.g., bakery vs. cafe vs. restaurant)
+
+### Cases 
+
+**What are the cases, and how many are there?**
+
+Each row represent a inspection with 18 variables about the inspection. There are 1,000 cases. 
+
+### Data collection 
+
+**Describe the method of data collection.**
+The data were compiled from several New York City Department of Health and Mental Hygiene administrative systems.
+
+The data set contains every sustained or not yet adjudicated violation citation from every full or special program inspection conducted up to three years prior to the most recent inspection for restaurants and college cafeterias
+
+### Type of study 
+
+**What type of study is this (observational/experiment)?**
+This is an observational study. 
+
+### Data Source 
+
+**If you collected the data, state self-collected. If not, provide a citation/link.**
+
+NYC OpenData, Department of Health and Mental Hygiene, DOHM, New York City Restaurant Inspection Results', https://nycopendata.socrata.com/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/xx67-kt59.
+
+
+### Response 
+
+**What is the response variable, and what type is it (numerical/categorical)?**
+
+The response variable is the grade the food establishment receives. The response variable is categorical.
+
+
+### Explanatory 
+
+**What is the explanatory variable, and what type is it (numerical/categorival)?**
+The explanatory variable is the inspection type, whether the inspection is initial or a re-inspection. The inspection type is a categorical variable.
+
+
+### Relevant summary statistics 
+
+**Provide summary statistics relevant to your research question. For example, if you’re comparing means across groups provide means, SDs, sample sizes of each group. This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
+
+Some data cleaning using tydr will be required before analysis can occur. Tidyr separate function will be used to separate and to place one inspection type into a column.  Inspection type variable will be recorded to a numerical value, before running analysis to determine whether initial or re-inspection has a statistical effect on the type of grade received and the type of food establishment. 
+
+The cuisine_type variable will be recorded to a numerical value to support the analysis.
+
+Additionally, the missing values for grade will be assess to determine whether the grade score can be used to calculuate a grade to address some missing values.  Missing values  will be recorded to zeros instead of NAs to support the analysis.
+
+```{r}
+# Select variable for analysis
+dataSel <- select(dataTbl, cuisine_description, record_date, inspection_date, score,
+                  grade, critical_flag, camis, action, violation_code,
+                  violation_description, grade_date, inspection_type)
+
+
+# Summary statistics will not run since the majority of the data are not numeric
+# sum(datasel)
+```
+
+
+```{r}
+# Filter food establishments by inspection type
+#dataFil <- filter(dataSel, cuisine_description %in% c('bakery', 'hamburgers'))
+
+```
+
